@@ -2,6 +2,9 @@
 
 WEBT-VT | CORE | 05 - Sessions and Cookies
 
-## Composer Infos
+### Using PHP CS Fixer via the command line
 
-* `vendor/bin/php-cs-fixer fix` for PSR-12 coding standards 
+```bash
+  docker exec -it CORE5 bash
+  vendor/bin/php-cs-fixer fix
+```
