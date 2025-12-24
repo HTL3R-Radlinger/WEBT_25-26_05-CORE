@@ -1,72 +1,54 @@
 <?php
+$preferences = [];
 
-/**
- * Entry point of the application.
- *
- * This file:
- * - loads demo meal plans
- * - generates QR codes for each meal plan
- * - prepares structured data for the template
- * - renders the final HTML using the TemplateEngine
- */
-
-require_once '../vendor/autoload.php';
-
-use Radlinger\Mealplan\QrCode\QrCodeBuilder;
-use Radlinger\Mealplan\Seeder\MealSeeder;
-use Radlinger\Mealplan\View\TemplateEngine;
-
-/**
- * Generate demo meal plans.
- * This replaces a database for this prototype.
- */
-$mealPlans = MealSeeder::generate();
-
-/**
- * Base API link used inside QR codes.
- * Each QR code will point to a specific meal plan ID.
- */
-$apiLink = "http://localhost:8080/api.php?mealID=";
-
-/**
- * Data array passed to the template engine.
- * It contains all variables and loop structures
- * required by index.html.
- */
-$data = [
-    'head' => <<<HEAD
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>MealPlans</title>
-        <link rel="stylesheet" href="/styles/style.css">
-    </head>
-    HEAD,
-
-    // Page headline
-    'header' => "All Meal Plans",
-
-    // Container for dynamically rendered meal plans
-    'plans' => [],
-];
-
-/**
- * Convert each MealPlan object into a template-friendly structure.
- * QR codes are generated dynamically for each plan.
- */
-foreach ($mealPlans as $plan) {
-    $data['plans'][] = (object)[
-        'plan_name' => $plan->name,
-        'school_name' => $plan->schoolName,
-        'week_of_delivery' => $plan->weekOfDelivery,
-        'plan_meals' => $plan->meals,
-
-        // QR code linking to the API endpoint
-        'qr_code' => QrCodeBuilder::generate($apiLink . $plan->id, 'MealPlan Nr.: ' . $plan->id)->getDataUri()
-    ];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['type_appetizer'])) {
+        $preferences[] = 'type_appetizer';
+    }
+    if (isset($_POST['type_mainCourse'])) {
+        $preferences[] = 'type_mainCourse';
+    }
+    if (isset($_POST['type_dessert'])) {
+        $preferences[] = 'type_dessert';
+    }
+    setcookie("preferences", json_encode($preferences), time() + 600, "/", "localhost");
 }
-
-/**
- * Render the HTML template with all prepared data.
- */
-echo TemplateEngine::render('../templates/index.html', $data);
+?>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CORE5</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+<h2>Meal Types</h2>
+<form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+    <label for="type_appetizer">
+        <input type="checkbox" name="type_appetizer" id="type_appetizer">
+        Appetizer
+    </label>
+    <hr>
+    <label for="type_mainCourse">
+        <input type="checkbox" name="type_mainCourse" id="type_mainCourse">
+        Main Course
+    </label>
+    <hr>
+    <label for="type_dessert">
+        <input type="checkbox" name="type_dessert" id="type_dessert">
+        Dessert
+    </label>
+    <hr>
+    <input type="submit" name="submit" value="Send">
+</form>
+<?php
+echo $_COOKIE["preferences"];
+if (!empty($preferences)) {
+    echo '<pre>' . json_encode($preferences, JSON_PRETTY_PRINT) . '</pre>';
+}
+?>
+</body>
+</html>
