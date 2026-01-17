@@ -29,11 +29,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         setcookie(
                 name: "preferences",
                 value: json_encode($preferences),
-                expires_or_options: time() + 600,
-                path: "/",
-                domain: "localhost",
-                secure: false,          // HTTPS only
-                httponly: true          // no access via JS (prevent XSS-Attacks)
+                expires_or_options: [
+                        'expires' => time() + 600,
+                        'path' => '/',
+                        'domain' => 'localhost',
+                        'secure' => false,          // true when using HTTPS
+                        'httponly' => true,         // no access via JavaScript (prevents XSS attacks)
+                        'samesite' => 'Lax'         // protects against CSRF attacks (recommended default)
+                ]
         );
 
         // Redirect -> new Request -> Cookie is visible
