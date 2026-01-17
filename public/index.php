@@ -52,11 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 #[NoReturn]
 function deleteCookie(): void
 {
-    // Start session if not active
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
-
     // Clear session data
     $_SESSION = [];
     session_unset();
@@ -88,7 +83,7 @@ function deleteCookie(): void
 </head>
 <body>
 <h2>Meal Types</h2>
-<form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+<form method="POST" action="<?= $_SERVER['PHP_SELF']; ?>">
     <label>
         <input type="checkbox"
                name="type_appetizer"
