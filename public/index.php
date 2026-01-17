@@ -1,72 +1,86 @@
 <?php
 
-/**
- * Entry point of the application.
- *
- * This file:
- * - loads demo meal plans
- * - generates QR codes for each meal plan
- * - prepares structured data for the template
- * - renders the final HTML using the TemplateEngine
- */
+use JetBrains\PhpStorm\NoReturn;
 
-require_once '../vendor/autoload.php';
+$storedPreferences = [];
 
-use Radlinger\Mealplan\QrCode\QrCodeBuilder;
-use Radlinger\Mealplan\Seeder\MealSeeder;
-use Radlinger\Mealplan\View\TemplateEngine;
+if (isset($_COOKIE['preferences'])) {
+    $storedPreferences = json_decode($_COOKIE['preferences'], true);
+}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['deleteCookie'])) {
+        deleteCookie();
+    }
+    if (isset($_POST['updateCookie'])) {
+        $preferences = [];
+        if (isset($_POST['type_appetizer'])) {
+            $preferences[] = 'type_appetizer';
+        }
+        if (isset($_POST['type_mainCourse'])) {
+            $preferences[] = 'type_mainCourse';
+        }
+        if (isset($_POST['type_dessert'])) {
+            $preferences[] = 'type_dessert';
+        }
 
-/**
- * Generate demo meal plans.
- * This replaces a database for this prototype.
- */
-$mealPlans = MealSeeder::generate();
+        setcookie("preferences", json_encode($preferences), time() + 600, "/", "localhost");
 
-/**
- * Base API link used inside QR codes.
- * Each QR code will point to a specific meal plan ID.
- */
-$apiLink = "http://localhost:8080/api.php?mealID=";
-
-/**
- * Data array passed to the template engine.
- * It contains all variables and loop structures
- * required by index.html.
- */
-$data = [
-    'head' => <<<HEAD
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>MealPlans</title>
-        <link rel="stylesheet" href="/styles/style.css">
-    </head>
-    HEAD,
-
-    // Page headline
-    'header' => "All Meal Plans",
-
-    // Container for dynamically rendered meal plans
-    'plans' => [],
-];
-
-/**
- * Convert each MealPlan object into a template-friendly structure.
- * QR codes are generated dynamically for each plan.
- */
-foreach ($mealPlans as $plan) {
-    $data['plans'][] = (object)[
-        'plan_name' => $plan->name,
-        'school_name' => $plan->schoolName,
-        'week_of_delivery' => $plan->weekOfDelivery,
-        'plan_meals' => $plan->meals,
-
-        // QR code linking to the API endpoint
-        'qr_code' => QrCodeBuilder::generate($apiLink . $plan->id, 'MealPlan Nr.: ' . $plan->id)->getDataUri()
-    ];
+        // Redirect -> new Request -> Cookie is visible
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit;
+    }
+}
+#[NoReturn]
+function deleteCookie(): void
+{
+    setcookie('preferences', "", time() - 1200);
+    unset($_COOKIE['preferences']);
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
 }
 
-/**
- * Render the HTML template with all prepared data.
- */
-echo TemplateEngine::render('../templates/index.html', $data);
+?>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CORE5</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+<h2>Meal Types</h2>
+<form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+    <label>
+        <input type="checkbox"
+               name="type_appetizer"
+                <?= in_array('type_appetizer', $storedPreferences) ? 'checked' : '' ?>
+        >
+        Appetizer
+    </label>
+    <hr>
+    <label>
+        <input type="checkbox"
+               name="type_mainCourse"
+                <?= in_array('type_mainCourse', $storedPreferences) ? 'checked' : '' ?>
+        >
+        Main Course
+    </label>
+    <hr>
+    <label>
+        <input type="checkbox"
+               name="type_dessert"
+                <?= in_array('type_dessert', $storedPreferences) ? 'checked' : '' ?>
+        >
+        Dessert
+    </label>
+    <hr>
+    <input type="submit" name="updateCookie" value="Save to Cookie">
+</form>
+<form method="POST" action="<?= $_SERVER['PHP_SELF']; ?>">
+    <input type="submit" name="deleteCookie" value="Reset Preferences">
+</form>
+</body>
+</html>

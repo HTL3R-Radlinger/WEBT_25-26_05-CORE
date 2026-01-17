@@ -1,128 +1,222 @@
+/* Reset & base */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-}
-
-html {
-    font-size: 100%;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #121212;
-    color: #e0e0e0;
-    line-height: 1.6;
+    background: #0f1220;
+    color: #e5e7eb;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
 }
 
-/* Sichtbarer Fokus (Accessibility) */
-:focus-visible {
-    outline: 3px solid #64b5f6;
+/* Headline */
+h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: #f9fafb;
+}
+
+/* Card / Form */
+form {
+    background: #161a2e;
+    width: 100%;
+    max-width: 420px;
+    padding: 26px 30px;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Labels & checkboxes */
+label {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #d1d5db;
+}
+
+input[type="checkbox"] {
+    margin-right: 12px;
+    width: 18px;
+    height: 18px;
+    accent-color: #6366f1; /* Indigo */
+}
+
+/* Divider */
+hr {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin: 16px 0;
+}
+
+/* Buttons */
+input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+/* Save button */
+input[name="updateCookie"] {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: #ffffff;
+}
+
+input[name="updateCookie"]:hover {
+    background: linear-gradient(135deg, #4f46e5, #4338ca);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(99, 102, 241, 0.35);
+}
+
+/* Reset button */
+input[name="deleteCookie"] {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #ffffff;
+}
+
+input[name="deleteCookie"]:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(239, 68, 68, 0.35);
+}
+
+/* Focus states (accessibility) */
+input:focus-visible {
+    outline: 2px solid #6366f1;
     outline-offset: 2px;
 }
 
-header {
-    background-color: #1b5e20;
-    color: #ffffff;
-    padding: 1.5rem 1rem;
-    text-align: center;
-    border-bottom: 1px solid #2e7d32;
+/* Mobile tweaks */
+@media (max-width: 480px) {
+    form {
+        padding: 22px;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+}
+/* Reset & base */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-header h1 {
-    font-size: 1.8rem;
-    font-weight: bold;
-}
-
-.plans {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 1rem;
-
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-}
-
-.meal-plan {
-    background-color: #1e1e1e;
-    border: 1px solid #333;
-    border-radius: 6px;
-    padding: 1.5rem;
-
+body {
+    background: #0f1220;
+    color: #e5e7eb;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
 }
 
-.meal-plan h2 {
-    font-size: 1.4rem;
-    margin-bottom: 0.5rem;
-    color: #81c784;
+/* Headline */
+h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: #f9fafb;
 }
 
-.meal-plan p {
-    font-size: 0.95rem;
-    margin-bottom: 0.25rem;
-    color: #d0d0d0;
-}
-
-.meal-plan h3 {
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
-    font-size: 1.1rem;
-    color: #eeeeee;
-}
-
-.meals {
-    list-style: none;
-    margin-bottom: 1rem;
-
-    display: grid;
-    gap: 0.75rem;
-}
-
-.meal {
-    border: 1px solid #444;
-    border-radius: 4px;
-    padding: 0.75rem;
-    background-color: #252525;
-}
-
-.meal h2 {
-    font-size: 1.05rem;
-    margin-bottom: 0.25rem;
-    color: #a5d6a7;
-}
-
-.meal p {
-    font-size: 0.9rem;
-    color: #cccccc;
-}
-
-.meal-plan img {
-    align-self: center;
-    margin-top: auto;
-
-    max-width: 180px;
+/* Card / Form */
+form {
+    background: #161a2e;
     width: 100%;
-    height: auto;
-
-    border: 1px solid #444;
-    padding: 0.5rem;
-    background-color: #ffffff;
+    max-width: 420px;
+    padding: 26px 30px;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-@media (max-width: 600px) {
+/* Labels & checkboxes */
+label {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #d1d5db;
+}
 
-    header h1 {
-        font-size: 1.4rem;
+input[type="checkbox"] {
+    margin-right: 12px;
+    width: 18px;
+    height: 18px;
+    accent-color: #6366f1; /* Indigo */
+}
+
+/* Divider */
+hr {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin: 16px 0;
+}
+
+/* Buttons */
+input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+/* Save button */
+input[name="updateCookie"] {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: #ffffff;
+}
+
+input[name="updateCookie"]:hover {
+    background: linear-gradient(135deg, #4f46e5, #4338ca);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(99, 102, 241, 0.35);
+}
+
+/* Reset button */
+input[name="deleteCookie"] {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #ffffff;
+}
+
+input[name="deleteCookie"]:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(239, 68, 68, 0.35);
+}
+
+/* Focus states (accessibility) */
+input:focus-visible {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
+}
+
+/* Mobile tweaks */
+@media (max-width: 480px) {
+    form {
+        padding: 22px;
     }
 
-    .meal-plan {
-        padding: 1rem;
-    }
-
-    .meal-plan h2 {
-        font-size: 1.25rem;
+    h2 {
+        font-size: 1.5rem;
     }
 }
