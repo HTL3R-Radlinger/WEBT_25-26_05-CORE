@@ -26,18 +26,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $preferences[] = 'type_dessert';
         }
 
-        /**
-         * setcookie(
-         *      string $name,
-         *      string $value = "",
-         *      int $expires_or_options = 0,
-         *      string $path = "",
-         *      string $domain = "",
-         *      bool $secure = false,
-         *      bool $httponly = false
-         * ): bool
-         */
-        setcookie("preferences", json_encode($preferences), time() + 600, "/", "localhost", false, false);
+        setcookie(
+                name: "preferences",
+                value: json_encode($preferences),
+                expires_or_options: time() + 600,
+                path: "/",
+                domain: "localhost",
+                secure: false,          // HTTPS only
+                httponly: true          // no access via JS (prevent XSS-Attacks)
+        );
 
         // Redirect -> new Request -> Cookie is visible
         header("Location: " . $_SERVER['PHP_SELF']);
