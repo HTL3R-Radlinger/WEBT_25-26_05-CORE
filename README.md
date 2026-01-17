@@ -15,3 +15,9 @@ WEBT-VT | CORE | 05 - Sessions and Cookies
   docker exec -it CORE5 bash
   vendor/bin/php-cs-fixer fix
 ```
+
+---
+### US1:
+US1 can be found in `public/mealTypes.php`
+
+### US2:
