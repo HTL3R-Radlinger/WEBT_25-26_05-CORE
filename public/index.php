@@ -2,10 +2,13 @@
 
 use JetBrains\PhpStorm\NoReturn;
 
-$storedPreferences = [];
+session_start();
+session_regenerate_id(true); // changes ID but keeps Data
+
+$_SESSION["storedPreferences"] = [];
 
 if (isset($_COOKIE['preferences'])) {
-    $storedPreferences = json_decode($_COOKIE['preferences'], true);
+    $_SESSION["storedPreferences"] = json_decode($_COOKIE['preferences'], true);
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['deleteCookie'])) {
@@ -23,7 +26,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $preferences[] = 'type_dessert';
         }
 
-        setcookie("preferences", json_encode($preferences), time() + 600, "/", "localhost");
+        /**
+         * setcookie(
+         *      string $name,
+         *      string $value = "",
+         *      int $expires_or_options = 0,
+         *      string $path = "",
+         *      string $domain = "",
+         *      bool $secure = false,
+         *      bool $httponly = false
+         * ): bool
+         */
+        setcookie("preferences", json_encode($preferences), time() + 600, "/", "localhost", false, false);
 
         // Redirect -> new Request -> Cookie is visible
         header("Location: " . $_SERVER['PHP_SELF']);
@@ -35,6 +49,7 @@ function deleteCookie(): void
 {
     setcookie('preferences', "", time() - 1200);
     unset($_COOKIE['preferences']);
+    session_destroy();
     header("Location: " . $_SERVER['PHP_SELF']);
     exit;
 }
@@ -56,7 +71,7 @@ function deleteCookie(): void
     <label>
         <input type="checkbox"
                name="type_appetizer"
-                <?= in_array('type_appetizer', $storedPreferences) ? 'checked' : '' ?>
+                <?= in_array('type_appetizer', $_SESSION["storedPreferences"]) ? 'checked' : '' ?>
         >
         Appetizer
     </label>
@@ -64,7 +79,7 @@ function deleteCookie(): void
     <label>
         <input type="checkbox"
                name="type_mainCourse"
-                <?= in_array('type_mainCourse', $storedPreferences) ? 'checked' : '' ?>
+                <?= in_array('type_mainCourse', $_SESSION["storedPreferences"]) ? 'checked' : '' ?>
         >
         Main Course
     </label>
@@ -72,7 +87,7 @@ function deleteCookie(): void
     <label>
         <input type="checkbox"
                name="type_dessert"
-                <?= in_array('type_dessert', $storedPreferences) ? 'checked' : '' ?>
+                <?= in_array('type_dessert', $_SESSION["storedPreferences"]) ? 'checked' : '' ?>
         >
         Dessert
     </label>
