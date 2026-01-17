@@ -41,18 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
          * ): bool
          */
 
-        setcookie(
-                name: "preferences",
-                value: json_encode($preferences),
-                expires_or_options: [
-                        'expires' => time() + 600,
-                        'path' => '/',
-                        'domain' => 'localhost',
-                        'secure' => false,
-                        'httponly' => true,
-                        'samesite' => 'Lax'
-                ]
-        );
+        setcookie(name: "preferences", value: json_encode($preferences), expires_or_options: ['expires' => time() + 600, 'path' => '/', 'domain' => 'localhost', 'secure' => false, 'httponly' => true, 'samesite' => 'Lax']);
 
         // Redirect -> new Request -> Cookie is visible
         header("Location: " . $_SERVER['PHP_SELF']);
