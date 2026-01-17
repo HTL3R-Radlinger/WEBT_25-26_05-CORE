@@ -1,11 +1,6 @@
 {
   "name": "radlinger/mealplan",
   "description": "Project for our WEBT Core 5 exercise with the topic MealPlan",
-  "autoload": {
-    "psr-4": {
-      "Radlinger\\Mealplan\\": "src/"
-    }
-  },
   "require": {
     "php": "^8.2"
   },

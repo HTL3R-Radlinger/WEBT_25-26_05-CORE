@@ -48,12 +48,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
+
 #[NoReturn]
 function deleteCookie(): void
 {
-    setcookie('preferences', "", time() - 1200);
-    unset($_COOKIE['preferences']);
+    // Start session if not active
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    // Clear session data
+    $_SESSION = [];
+    session_unset();
     session_destroy();
+
+    // Remove session cookie from browser
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+    }
+    // Remove cookie
+    setcookie('preferences', '', time() - 1200, '/');
+
+    // Reload
     header("Location: " . $_SERVER['PHP_SELF']);
     exit;
 }
